@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torres de Hanoi - Juego</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        .container { display: flex; justify-content: center; align-items: flex-end; height: 300px; }
+        .tower { width: 120px; height: 200px; border: 2px solid black; display: flex; flex-direction: column-reverse; align-items: center; margin: 10px; }
+        .disk { height: 20px; background-color: steelblue; text-align: center; color: white; cursor: grab; }
+        button { margin-top: 20px; padding: 10px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h2>Torres de Hanoi - Juego Interactivo</h2>
+    <div class="container">
+        <div class="tower" id="tower1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="tower" id="tower2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="tower" id="tower3" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    </div>
+    <p id="message"></p>
+    
+    <script>
+        let numDisks = 3;
+        let towers = { tower1: [], tower2: [], tower3: [] };
+
+        function createDisks() {
+            let tower = document.getElementById('tower1');
+            for (let i = numDisks; i >= 1; i--) {
+                let disk = document.createElement('div');
+                disk.classList.add('disk');
+                disk.style.width = (i * 30 + 40) + 'px';
+                disk.textContent = i;
+                disk.draggable = true;
+                disk.id = 'disk' + i;
+                disk.ondragstart = drag;
+                towers.tower1.push(disk);
+                tower.appendChild(disk);
+            }
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drag(event) {
+            event.dataTransfer.setData("text", event.target.id);
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            let diskId = event.dataTransfer.getData("text");
+            let disk = document.getElementById(diskId);
+            let tower = event.target;
+            if (!tower.classList.contains("tower")) return;
+            
+            let disksInTower = tower.getElementsByClassName("disk");
+            if (disksInTower.length > 0) {
+                let topDisk = disksInTower[disksInTower.length - 1];
+                if (parseInt(disk.textContent) > parseInt(topDisk.textContent)) {
+                    return;
+                }
+            }
+            
+            tower.appendChild(disk);
+            checkWin();
+        }
+
+        function checkWin() {
+            let tower3 = document.getElementById("tower3");
+            if (tower3.children.length === numDisks) {
+                document.getElementById("message").textContent = "¡Felicidades! Has resuelto las Torres de Hanoi.";
+            }
+        }
+        
+        createDisks();
+    </script>
+</body>
+</html>
