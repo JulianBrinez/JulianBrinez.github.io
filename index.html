@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos Interactivos</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .container { display: flex; justify-content: center; align-items: flex-end; height: 300px; }
+        .tower { width: 120px; height: 200px; border: 2px solid black; display: flex; flex-direction: column-reverse; align-items: center; margin: 10px; }
+        .disk { height: 20px; background-color: steelblue; cursor: grab; }
+        .chess-container { text-align: center; margin-top: 20px; }
+        .chess-board { display: grid; grid-template-columns: repeat(8, 50px); width: 400px; border: 2px solid black; margin: auto; }
+        .chess-cell { width: 50px; height: 50px; text-align: center; vertical-align: middle; border: 1px solid black; font-size: 20px; }
+        .highlight { background-color: lightblue; }
+        .knight { background-color: blue; color: white; }
+    </style>
+</head>
+<body>
+    <h2>Torres de Hanoi - Juego Interactivo</h2>
+    <div class="container">
+        <div class="tower" id="tower1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="tower" id="tower2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="tower" id="tower3" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    </div>
+    <p id="message"></p>
+    <button onclick="restartHanoi()">Reiniciar Torres de Hanoi</button>
+
+    <h2 style="background-color:blue; color:white; text-align:center;">El Problema del Caballo de Ajedrez</h2>
+    <p style="background-color: lightblue; text-align:center;">Intenta mover el caballo de manera que recorra todas las casillas sin repetir movimientos.</p>
+    <div class="chess-container" id="chessboard"></div>
+    <button onclick="resetChess()">Reiniciar</button>
+
+    <script>
+        // Funcionalidad de Torres de Hanoi
+        let numDisks = 3;
+        let towers = { tower1: [], tower2: [], tower3: [] };
+        function createDisks() {
+            let tower = document.getElementById('tower1');
+            for (let i = numDisks; i >= 1; i--) {
+                let disk = document.createElement('div');
+                disk.classList.add('disk');
+                disk.style.width = (i * 30) + 'px';
+                disk.draggable = true;
+                disk.ondragstart = drag;
+                towers.tower1.push(disk);
+                tower.appendChild(disk);
+            }
+        }
+        function allowDrop(event) { event.preventDefault(); }
+        function drag(event) { event.dataTransfer.setData("text", event.target.id); }
+        function drop(event) {
+            event.preventDefault();
+            let diskId = event.dataTransfer.getData("text");
+            let disk = document.getElementById(diskId);
+            let targetTower = event.target;
+            if (disk && target.classList.contains("tower")) {
+                let disksInTower = target.getElementsByClassName("disk");
+                if (disksInTower.length > 0) {
+                    let topDisk = disksInTower[disksInTower.length - 1];
+                    if (parseInt(disk.textContent) > parseInt(topDisk.textContent)) return;
+                }
+                target.appendChild(disk);
+                checkWin();
+            }
+        }
+        function checkWin() {
+            if (towers.tower2.length === numDisks || towers.tower3.length === numDisks) {
+                document.getElementById("message").textContent = "¡Felicidades! Has resuelto las Torres de Hanoi.";
+            }
+        }
+        createDisks();
+
+        // Lógica del Problema del Caballo de Ajedrez
+        let board = document.getElementById("chessboard");
+        let boardSize = 8;
+        let knightPos = { x: 0, y: 0 };
+        let moves = [
+            { x: -2, y: -1 }, { x: -2, y: -1 }, { x: -2, y: 1 }, { x: -1, y: 2 },
+            { x: 1, y: 2 }, { x: 2, y: 1 }, { x: 2, y: -1 }, { x: 1, y: -2 }
+        ];
+        let visited = new Set();
+
+        function createChessboard() {
+            board.innerHTML = "";
+            for (let i = 0; i < boardSize; i++) {
+                for (let j = 0; j < boardSize; j++) {
+                    let cell = document.createElement("div");
+                    cell.classList.add("chess-cell");
+                    cell.dataset.x = j;
+                    cell.dataset.y = i;
+                    cell.onclick = () => moveKnight(j, i);
+                    board.appendChild(cell);
+                }
+            }
+            updateKnightPosition();
+        }
+        function updateKnightPosition() {
+            document.querySelectorAll(".chess-cell").forEach(cell => {
+                let x = parseInt(cell.dataset.x);
+                let y = parseInt(cell.dataset.y);
+                if (knightPos.x === x && knightPos.y === y) {
+                    cell.classList.add("knight");
+                    cell.innerHTML = "♞";
+                } else {
+                    cell.classList.remove("knight");
+                    cell.innerHTML = "";
+                }
+                cell.classList.remove("highlight");
+            });
+            highlightMoves();
+        }
+        function highlightMoves() {
+            moves.forEach(move => {
+                let newX = knightPos.x + move.x;
+                let newY = knightPos.y + move.y;
+                let validCell = document.querySelector(`.chess-cell[data-x='${newX}'][data-y='${newY}']`);
+                if (validCell && !visited.has(`${newX},${newY}`)) {
+                    validCell.classList.add("highlight");
+                }
+            });
+        }
+        function moveKnight(x, y) {
+            if (!document.querySelector(`.chess-cell[data-x='${x}'][data-y='${y}']`).classList.contains("highlight")) return;
+            visited.add(`${x},${y}`);
+            knightPos = { x, y };
+            updateKnightPosition();
+            if (visited.size === boardSize * boardSize) {
+                alert("¡Felicidades! Has recorrido todas las casillas.");
+            }
+        }
+        function resetChess() {
+            knightPos = { x: 0, y: 0 };
+            visited.clear();
+            visited.add("0,0");
+            createChessboard();
+        }
+        resetChess();
+    </script>
+</body>
+</html>
