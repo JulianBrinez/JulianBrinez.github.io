@@ -3,109 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caballo de Ajedrez</title>
+    <title>Algoritmos</title>
     <style>
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-        }
-        table {
-            border-collapse: collapse;
-            margin: 20px auto;
-        }
-        td {
-            width: 50px;
-            height: 50px;
-            border: 1px solid black;
-            text-align: center;
-            font-size: 24px;
-        }
-        .selected {
-            background-color: lightblue;
-        }
-        .possible-move {
-            background-color: lightgreen;
-        }
+        body { text-align: center; font-family: Arial, sans-serif; }
+        .container { display: flex; justify-content: center; margin-top: 20px; }
+        .exercise { display: none; }
+        table { border-collapse: collapse; margin: 20px auto; }
+        td { width: 50px; height: 50px; border: 1px solid black; text-align: center; font-size: 20px; }
+        .highlight { background-color: lightblue; }
+        .knight { background-color: steelblue; color: white; font-weight: bold; }
+        button { margin: 10px; padding: 10px; font-size: 16px; }
     </style>
 </head>
 <body>
-    <h1>El Problema del Caballo de Ajedrez</h1>
-    <p>Intenta mover el caballo de manera que recorra todas las casillas sin repetir movimientos.</p>
-    <table id="chessboard" align="center"></table>
-    <button onclick="resetBoard()">Reiniciar</button>
+    <h1>Ejercicios de Algoritmos</h1>
+    <nav>
+        <button onclick="mostrarEjercicio('hanoi')">Torre de Hanói</button>
+        <button onclick="mostrarCaballoAjedrez()">Caballo de Ajedrez</button>
+    </nav>
+    
+    <div id="hanoi" class="exercise">
+        <h2>Torre de Hanói</h2>
+        <p>Intenta resolver la Torre de Hanói</p>
+        <label for="numDiscos">Cantidad de discos:</label>
+        <input type="number" id="numDiscos" value="3" min="1" max="10">
+        <button onclick="resolverHanoi()">Resolver</button>
+        <pre id="solucion"></pre>
+    </div>
+
+    <div id="caballo" class="exercise">
+        <h2>El Problema del Caballo de Ajedrez</h2>
+        <p>Intenta mover el caballo de manera que recorra todas las casillas sin repetir movimientos.</p>
+        <div class="container">
+            <table id="chessboard"></table>
+        </div>
+        <button onclick="iniciarCaballo()">Reiniciar</button>
+        <p id="caballoMessage"></p>
+    </div>
     
     <script>
-        const boardSize = 8;
-        let board = [];
-        let horsePosition = { x: 0, y: 0 };
-        const moves = [
-            {x: 2, y: 1}, {x: 2, y: -1}, {x: -2, y: 1}, {x: -2, y: -1},
-            {x: -2, y: 1}, {x: 1, y: 2}, {x: -1, y: 2}, {x: 1, y: -2}, {x: -1, y: -2}
-        ];
-        
-        function createBoard() {
-            let table = document.getElementById("chessboard");
-            table.innerHTML = "";
-            board = [];
-            for (let i = 0; i < boardSize; i++) {
-                let row = table.insertRow();
-                board[i] = [];
-                for (let j = 0; j < boardSize; j++) {
-                    let cell = row.insertCell();
-                    cell.dataset.x = i;
-                    cell.dataset.y = j;
-                    cell.onclick = () => moveHorse(i, j);
-                    board[i][j] = false;
-                }
+        function showExercise(id) {
+            document.querySelectorAll('.exercise').forEach(ex => ex.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
+    
+        function resolverHanoi() {
+            let n = parseInt(document.getElementById("numDiscos").value);
+            let resultado = document.getElementById("solucion");
+            resultado.innerHTML = "";
+            resolver(n, 'A', 'C', 'B');
+        }
+
+        function resolver() {
+            resultado.innerHTML = "";
+            let n = document.getElementById("numDiscos").value;
+            if (n > 0 && n <= 10) {
+                resolverHanoi(n, "A", "C", "B");
+            } else {
+                resultado.innerHTML = "Introduce un número de discos entre 1 y 10.";
             }
-            placeHorse(0, 0);
         }
-        
-        function placeHorse(x, y) {
-            board[horsePosition.x][horsePosition.y] = true;
-            horsePosition = { x, y };
-            board[x][y] = true;
-            updateBoard();
-        }
-        
-        function updateBoard() {
-            for (let i = 0; i < boardSize; i++) {
-                for (let j = 0; j < boardSize; j++) {
-                    let cell = document.querySelector(`[data-x='${i}'][data-y='${j}']`);
-                    cell.className = board[i][j] ? "selected" : "";
+
+        function createChessboard() {
+            let board = document.getElementById("chessboard");
+            for (let i = 0; i < 8; i++) {
+                let row = document.createElement("tr");
+                for (let j = 0; j < 8; j++) {
+                    let cell = document.createElement("td");
+                    cell.id = `cell-${i}-${j}`;
+                    cell.style.width = "50px";
+                    cell.style.height = "50px";
+                    cell.style.border = "1px solid black";
+                    cell.addEventListener("click", function() { moveKnight(i, j); });
+                    row.appendChild(cell);
                 }
+                document.getElementById("chessboard").appendChild(row);
             }
-            highlightMoves();
         }
-        
-        function moveHorse(x, y) {
-            if (board[x][y]) return;
-            placeHorse(x, y);
-        }
-        
-        function highlightMoves() {
-            let possibleMoves = getPossibleMoves(horsePosition.x, horsePosition.y);
-            possibleMoves.forEach(move => {
-                let cell = document.querySelector(`[data-x='${move.x}'][data-y='${move.y}']`);
-                if (cell) {
-                    cell.classList.add("possible-move");
-                }
+    
+        function marcarMovimientos(x, y) {
+            let posiblesMovimientos = [
+                [x + 2, y + 1], [x + 2, y - 1], [x - 2, y + 1], [x - 2, y - 1],
+                [x + 1, y + 2], [x + 1, y - 2], [x - 1, y + 2], [x - 1, y - 2],
+                [x + 1, y + 2], [x + 1, y - 2], [x - 1, y + 2], [x - 1, y - 2]
+            ];
+            document.querySelectorAll('td').forEach(cell => {
+                cell.style.backgroundColor = "white";
+            });
+            moves.forEach(([r, c]) => {
+                let cell = document.getElementById(`cell-${r}-${c}`);
+                if (cell) cell.style.backgroundColor = "lightblue";
             });
         }
-        
-        function getPossibleMoves(x, y) {
-            return moves.map(move => ({ x: x + move.x, y: y + move.y }))
-                .filter(move => move.x >= 0 && move.x < boardSize && move.y >= 0 && move.y < boardSize && !board[move.x][move.y]);
-        }
-        
-        function resetBoard() {
+    
+        function iniciarCaballo() {
             let table = document.getElementById("chessboard");
             table.innerHTML = "";
-            board = [];
-            placeHorse(0, 0);
+            for (let i = 0; i < 8; i++) {
+                let row = document.createElement("tr");
+                for (let j = 0; j < 8; j++) {
+                    let cell = document.createElement("td");
+                    cell.addEventListener("click", function () {
+                        document.querySelectorAll('td').forEach(c => c.style.backgroundColor = "white");
+                        this.style.backgroundColor = "lightblue";
+                        this.dataset.visited = true;
+                    });
+                    row.appendChild(cell);
+                }
+                document.getElementById("chessboard").appendChild(row);
+            }
         }
-        
-        createBoard();
+    
+        function reiniciar() {
+            document.getElementById("chessboard").innerHTML = "";
+            resolverCaballo();
+        }
+
+        function cambiarEjercicio(ejercicio) {
+            document.querySelectorAll('.exercise').forEach(div => {
+                div.style.display = 'none';
+            });
+            document.getElementById(ejercicio).style.display = 'block';
+        }
     </script>
 </body>
 </html>
