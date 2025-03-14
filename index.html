@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caballo de Ajedrez</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        td {
+            width: 50px;
+            height: 50px;
+            border: 1px solid black;
+            text-align: center;
+            font-size: 24px;
+        }
+        .selected {
+            background-color: lightblue;
+        }
+        .possible-move {
+            background-color: lightgreen;
+        }
+    </style>
+</head>
+<body>
+    <h1>El Problema del Caballo de Ajedrez</h1>
+    <p>Intenta mover el caballo de manera que recorra todas las casillas sin repetir movimientos.</p>
+    <table id="chessboard" align="center"></table>
+    <button onclick="resetBoard()">Reiniciar</button>
+    
+    <script>
+        const boardSize = 8;
+        let board = [];
+        let horsePosition = { x: 0, y: 0 };
+        const moves = [
+            {x: 2, y: 1}, {x: 2, y: -1}, {x: -2, y: 1}, {x: -2, y: -1},
+            {x: -2, y: 1}, {x: 1, y: 2}, {x: -1, y: 2}, {x: 1, y: -2}, {x: -1, y: -2}
+        ];
+        
+        function createBoard() {
+            let table = document.getElementById("chessboard");
+            table.innerHTML = "";
+            board = [];
+            for (let i = 0; i < boardSize; i++) {
+                let row = table.insertRow();
+                board[i] = [];
+                for (let j = 0; j < boardSize; j++) {
+                    let cell = row.insertCell();
+                    cell.dataset.x = i;
+                    cell.dataset.y = j;
+                    cell.onclick = () => moveHorse(i, j);
+                    board[i][j] = false;
+                }
+            }
+            placeHorse(0, 0);
+        }
+        
+        function placeHorse(x, y) {
+            board[horsePosition.x][horsePosition.y] = true;
+            horsePosition = { x, y };
+            board[x][y] = true;
+            updateBoard();
+        }
+        
+        function updateBoard() {
+            for (let i = 0; i < boardSize; i++) {
+                for (let j = 0; j < boardSize; j++) {
+                    let cell = document.querySelector(`[data-x='${i}'][data-y='${j}']`);
+                    cell.className = board[i][j] ? "selected" : "";
+                }
+            }
+            highlightMoves();
+        }
+        
+        function moveHorse(x, y) {
+            if (board[x][y]) return;
+            placeHorse(x, y);
+        }
+        
+        function highlightMoves() {
+            let possibleMoves = getPossibleMoves(horsePosition.x, horsePosition.y);
+            possibleMoves.forEach(move => {
+                let cell = document.querySelector(`[data-x='${move.x}'][data-y='${move.y}']`);
+                if (cell) {
+                    cell.classList.add("possible-move");
+                }
+            });
+        }
+        
+        function getPossibleMoves(x, y) {
+            return moves.map(move => ({ x: x + move.x, y: y + move.y }))
+                .filter(move => move.x >= 0 && move.x < boardSize && move.y >= 0 && move.y < boardSize && !board[move.x][move.y]);
+        }
+        
+        function resetBoard() {
+            let table = document.getElementById("chessboard");
+            table.innerHTML = "";
+            board = [];
+            placeHorse(0, 0);
+        }
+        
+        createBoard();
+    </script>
+</body>
+</html>
