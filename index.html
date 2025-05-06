@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Página Principal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f7fa;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 60px 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0077b6;
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      text-align: center;
+      color: #555;
+      margin-bottom: 40px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+    }
+
+    .button {
+      background-color: #0077b6;
+      border: none;
+      color: white;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s;
+      text-align: center;
+    }
+
+    .button:hover {
+      background-color: #023e8a;
+      transform: scale(1.03);
+    }
+
+    .bottom-button {
+      margin-top: 30px;
+      display: block;
+      width: 100%;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bienvenido a la Página Principal</h1>
+    <p>Selecciona una opción para continuar:</p>
+    
+    <div class="grid">
+      <button class="button">Carrito</button>
+      <button class="button">Registro</button>
+      <button class="button">Agenda</button>
+      <button class="button">Jerarquía</button>
+      <button class="button">Laberinto</button>
+      <button class="button">Árbol</button>
+      <button class="button">Turnos</button>
+      <button class="button">Historial</button>
+      <button class="button">Profundidad del Árbol</button>
+      <button class="button">Ciclos en Dependencias</button>
+    </div>
+
+    <button class="button bottom-button">Preguntas</button>
+  </div>
+</body>
+</html>

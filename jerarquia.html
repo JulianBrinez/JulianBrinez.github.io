@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Jerarquía de Empleados</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #e0f2ff;
+      font-family: 'Roboto Slab', serif;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 500px;
+    }
+
+    h1 {
+      font-size: 26px;
+      color: #0077b6;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-family: 'Roboto Slab', serif;
+    }
+
+    .button-group {
+      margin-top: 15px;
+    }
+
+    button {
+      background-color: #0077b6;
+      text-decoration: none;
+      display: inline-block;
+      border: none;
+      padding: 10px 15px;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      margin: 5px;
+      transition: background-color 0.3s ease;
+      font-family: 'Roboto Slab', serif;
+    }
+
+    button:hover {
+      background-color: #023e8a;
+    }
+
+    #output {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #023e8a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Jerarquía de Empleados (Árbol Binario)</h1>
+
+    <input type="text" id="ceo" placeholder="Nombre del CEO">
+    <input type="text" id="leftManager" placeholder="Nombre del Gerente Izquierdo">
+    <input type="text" id="rightManager" placeholder="Nombre del Gerente Derecho">
+
+    <div class="button-group">
+      <button onclick="crearJerarquia()">Crear Jerarquía</button>
+      <button onclick="recorridoBFS()">Recorrido BFS</button>
+      <button onclick="recorridoDFS()">Recorrido DFS</button>
+    </div>
+
+    <div id="output"></div>
+  </div>
+
+  <script>
+    class Nodo {
+      constructor(nombre) {
+        this.nombre = nombre;
+        this.izquierdo = null;
+        this.derecho = null;
+      }
+    }
+
+    let raiz = null;
+
+    function crearJerarquia() {
+      const ceo = document.getElementById('ceo').value;
+      const left = document.getElementById('leftManager').value;
+      const right = document.getElementById('rightManager').value;
+
+      if (!ceo) {
+        alert("Por favor ingresa el nombre del CEO.");
+        return;
+      }
+
+      raiz = new Nodo(ceo);
+      if (left) raiz.izquierdo = new Nodo(left);
+      if (right) raiz.derecho = new Nodo(right);
+
+      document.getElementById("output").innerText = "Jerarquía creada correctamente.";
+    }
+
+    function recorridoBFS() {
+      if (!raiz) {
+        alert("Primero crea la jerarquía.");
+        return;
+      }
+
+      let cola = [raiz];
+      let resultado = [];
+
+      while (cola.length > 0) {
+        let actual = cola.shift();
+        resultado.push(actual.nombre);
+
+        if (actual.izquierdo) cola.push(actual.izquierdo);
+        if (actual.derecho) cola.push(actual.derecho);
+      }
+
+      document.getElementById("output").innerText = "BFS: " + resultado.join(" → ");
+    }
+
+    function recorridoDFS() {
+      if (!raiz) {
+        alert("Primero crea la jerarquía.");
+        return;
+      }
+
+      let resultado = [];
+
+      function dfs(nodo) {
+        if (!nodo) return;
+        resultado.push(nodo.nombre);
+        dfs(nodo.izquierdo);
+        dfs(nodo.derecho);
+      }
+
+      dfs(raiz);
+      document.getElementById("output").innerText = "DFS: " + resultado.join(" → ");
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Correos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 300px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005f87;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .remove {
+      cursor: pointer;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Registro de Correos</h1>
+    <input type="email" id="email" placeholder="Ingresa tu correo" required>
+    <button onclick="agregarCorreo()">Agregar Correo</button>
+    
+    <h2>Correos Registrados</h2>
+    <ul id="correoList">
+      <!-- Los correos registrados aparecerán aquí -->
+    </ul>
+  </div>
+
+  <script>
+    const correoList = document.getElementById('correoList');
+
+    function agregarCorreo() {
+      const emailInput = document.getElementById('email');
+      const correo = emailInput.value.trim();
+      
+      if (correo === "") {
+        alert("Por favor ingresa un correo válido.");
+        return;
+      }
+      
+      // Crear un nuevo elemento de lista para el correo
+      const li = document.createElement('li');
+      li.textContent = correo;
+      
+      // Crear un botón de eliminar
+      const removeButton = document.createElement('span');
+      removeButton.textContent = "Eliminar";
+      removeButton.className = "remove";
+      removeButton.onclick = function() {
+        li.remove();
+      };
+
+      // Añadir el botón de eliminar al final del elemento de lista
+      li.appendChild(removeButton);
+      
+      // Añadir el correo a la lista
+      correoList.appendChild(li);
+      
+      // Limpiar el campo de entrada
+      emailInput.value = "";
+    }
+  </script>
+</body>
+</html>

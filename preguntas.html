@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas Java y Python - Estructuras de Datos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto Slab', serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #1d4d8c;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h2 {
+            color: #1d4d8c;
+            margin-top: 40px;
+            font-size: 1.8em;
+        }
+        h3 {
+            color: #2c3e50;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+        .pregunta {
+            background-color: #ffffff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #1d4d8c;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        p {
+            color: #555;
+            font-size: 1.1em;
+        }
+        pre {
+            background-color: #272822;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: Consolas, monospace;
+        }
+        .seccion {
+            margin-bottom: 40px;
+        }
+        .pregunta:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📘 Preguntas Java y Python - Estructuras de Datos</h1>
+
+<!-- Java -->
+<div class="seccion">
+    <h2>🟦 Java - JCF</h2>
+
+    <div class="pregunta">
+        <h3>1. ¿Cuál es la diferencia entre List y Set?</h3>
+        <p>List permite elementos duplicados y mantiene el orden de inserción. Set no permite duplicados y no garantiza orden.</p>
+        <pre><code>// Ejemplo en Java
+import java.util.*;
+
+List&lt;String&gt; lista = new ArrayList&lt;&gt;();
+lista.add("A");
+lista.add("A");
+
+Set&lt;String&gt; conjunto = new HashSet&lt;&gt;();
+conjunto.add("A");
+conjunto.add("A");
+
+System.out.println(lista);    // [A, A]
+System.out.println(conjunto); // [A]</code></pre>
+    </div>
+
+    <div class="pregunta">
+        <h3>2. ¿Qué clase garantiza orden de inserción sin duplicados?</h3>
+        <p>LinkedHashSet.</p>
+        <pre><code>Set&lt;String&gt; set = new LinkedHashSet&lt;&gt;();
+set.add("Uno");
+set.add("Dos");
+set.add("Uno");
+System.out.println(set); // [Uno, Dos]</code></pre>
+    </div>
+
+    <div class="pregunta">
+        <h3>3. ¿Qué estructura usar para una cola con prioridades?</h3>
+        <p>PriorityQueue.</p>
+        <pre><code>PriorityQueue&lt;Integer&gt; cola = new PriorityQueue&lt;&gt;();
+cola.add(3);
+cola.add(1);
+cola.add(2);
+System.out.println(cola.poll()); // 1</code></pre>
+    </div>
+
+    <div class="pregunta">
+        <h3>4. Ventajas de HashMap frente a TreeMap</h3>
+        <p>HashMap ofrece mejor rendimiento general en operaciones O(1), pero no mantiene orden. TreeMap mantiene orden natural o por comparador, pero con rendimiento O(log n).</p>
+        <pre><code>Map&lt;String, Integer&gt; hashMap = new HashMap&lt;&gt;();
+Map&lt;String, Integer&gt; treeMap = new TreeMap&lt;&gt;();
+
+hashMap.put("b", 2);
+hashMap.put("a", 1);
+treeMap.put("b", 2);
+treeMap.put("a", 1);
+
+System.out.println(hashMap); // Orden no garantizado
+System.out.println(treeMap); // Ordenado por clave</code></pre>
+    </div>
+
+    <div class="pregunta">
+        <h3>5. ¿Cómo recorrer un Map?</h3>
+        <p>Mediante for-each sobre entrySet() o usando streams.</p>
+        <pre><code>Map&lt;String, Integer&gt; mapa = new HashMap&lt;&gt;();
+mapa.put("A", 1);
+mapa.put("B", 2);
+
+for (Map.Entry&lt;String, Integer&gt; entry : mapa.entrySet()) {
+    System.out.println(entry.getKey() + ": " + entry.getValue());
+}</code></pre>
+    </div>
+</div>
+
+<!-- Python -->
+<div class="seccion">
+    <h2>🐍 Python</h2>
+
+    <div class="pregunta">
+        <h3>6. Equivalentes a List, Set, Map, Queue</h3>
+        <p>list, set, dict, collections.deque.</p>
+        <pre><code>from collections import deque
+
+lista = [1, 2, 3]
+conjunto = set([1, 2, 2])
+diccionario = {"a": 1, "b": 2}
+cola = deque(["x", "y"])</code></pre>
+    </div>
+
+    <div class="pregunta">
+        <h3>7. Diferencia entre list.append() y deque.append()</h3>
+        <p>deque.append() es más eficiente para agregar o eliminar al inicio o final.</p>
+        <pre><code>from collections import deque
+
+lista = []
+lista.insert(0, "nuevo")  # O(n)
+
+cola = deque()
+cola.appendleft("nuevo")  # O(1)</code></pre>
+    </div>
+
+    <div class="pregunta">
+        <h3>8. Librerías para grafos en Python</h3>
+        <p>networkx, igraph, graph-tool.</p>
+        <pre><code>import networkx as nx
+
+G = nx.Graph()
+G.add_edge("A", "B")
+nx.draw(G, with_labels=True)</code></pre>
+    </div>
+
+    <div class="pregunta">
+        <h3>9. Cómo se evita duplicación en un set</h3>
+        <p>El set verifica la unicidad internamente mediante <code>__hash__()</code> y <code>__eq__()</code>.</p>
+        <pre><code>s = set()
+s.add("a")
+s.add("a")
+print(s)  # {'a'}</code></pre>
+    </div>
+
+    <div class="pregunta">
+        <h3>10. ¿Por qué usar deque sobre lista normal?</h3>
+        <p>Por eficiencia en operaciones de cola (O(1) frente a O(n)).</p>
+        <pre><code>from collections import deque
+
+cola = deque()
+cola.append("uno")
+cola.appendleft("cero")
+print(cola.popleft())</code></pre>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>DFS Laberinto</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #e0f2ff;
+      font-family: 'Roboto Slab', serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 500px;
+    }
+
+    h1 {
+      color: #0077b6;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      width: 80%;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-family: 'Roboto Slab', serif;
+    }
+
+    button {
+      background-color: #0077b6;
+      border: none;
+      padding: 10px 15px;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 5px;
+      font-family: 'Roboto Slab', serif;
+    }
+
+    button:hover {
+      background-color: #023e8a;
+    }
+
+    .output {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #0077b6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Grafo DFS - Laberinto</h1>
+
+    <input id="cellName" type="text" placeholder="Nombre de la celda (ej: A)"><br>
+    <input id="connections" type="text" placeholder="Conexiones (ej: B,C,D)"><br>
+    <button onclick="addCell()">Agregar Celda</button>
+
+    <hr>
+
+    <input id="startCell" type="text" placeholder="Celda inicial para DFS (ej: A)"><br>
+    <button onclick="runDFS()">Ejecutar DFS</button>
+
+    <div class="output" id="result"></div>
+  </div>
+
+  <script>
+    const graph = {};
+
+    function addCell() {
+      const name = document.getElementById("cellName").value.trim().toUpperCase();
+      const connections = document.getElementById("connections").value.trim().toUpperCase().split(',').map(c => c.trim());
+
+      if (!name) {
+        alert("Por favor ingresa un nombre de celda.");
+        return;
+      }
+
+      graph[name] = connections;
+      alert(`Celda ${name} agregada con conexiones a: ${connections.join(', ')}`);
+      
+      // Limpiar campos
+      document.getElementById("cellName").value = '';
+      document.getElementById("connections").value = '';
+    }
+
+    function runDFS() {
+      const start = document.getElementById("startCell").value.trim().toUpperCase();
+      if (!graph[start]) {
+        alert("La celda inicial no existe en el grafo.");
+        return;
+      }
+
+      const visited = {};
+      const result = [];
+
+      function dfs(node) {
+        if (visited[node]) return;
+        visited[node] = true;
+        result.push(node);
+
+        for (let neighbor of graph[node] || []) {
+          dfs(neighbor);
+        }
+      }
+
+      dfs(start);
+
+      document.getElementById("result").innerText = "Recorrido DFS: " + result.join(" → ");
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Historial de Funciones</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #e0f2ff;
+      font-family: 'Roboto Slab', serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      width: 520px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #0077b6;
+      margin-bottom: 20px;
+    }
+
+    button, select {
+      background-color: #0077b6;
+      border: none;
+      padding: 10px 15px;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px;
+      font-family: 'Roboto Slab', serif;
+    }
+
+    button:hover, select:hover {
+      background-color: #023e8a;
+    }
+
+    .historial {
+      margin-top: 20px;
+      text-align: left;
+      max-height: 200px;
+      overflow-y: auto;
+      background: #f0f8ff;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .historial p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .controls {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Historial de Funciones</h1>
+
+    <button onclick="registrarAccion('📞 Llamar')">Llamar</button>
+    <button onclick="registrarAccion('💬 Enviar Mensaje')">Enviar Mensaje</button>
+    <button onclick="registrarAccion('🔒 Cerrar Sesión')">Cerrar Sesión</button>
+    <button onclick="registrarAccion('⚙️ Configuración')">Configuración</button>
+
+    <div class="controls">
+      <button onclick="borrarTodo()">🗑️ Borrar Todo</button>
+      <select id="tipoBorrar">
+        <option value="">Eliminar función específica</option>
+        <option value="📞 Llamar">📞 Llamar</option>
+        <option value="💬 Enviar Mensaje">💬 Enviar Mensaje</option>
+        <option value="🔒 Cerrar Sesión">🔒 Cerrar Sesión</option>
+        <option value="⚙️ Configuración">⚙️ Configuración</option>
+      </select>
+      <button onclick="borrarPorFuncion()">Eliminar</button>
+    </div>
+
+    <div class="historial" id="historial">
+      <p>No se han realizado acciones.</p>
+    </div>
+  </div>
+
+  <script>
+    let historial = [];
+
+    function registrarAccion(accion) {
+      const ahora = new Date();
+      const hora = ahora.toLocaleTimeString();
+      const entrada = { hora, accion };
+      historial.unshift(entrada); // Agregar al inicio
+      mostrarHistorial();
+    }
+
+    function mostrarHistorial() {
+      const div = document.getElementById("historial");
+      if (historial.length === 0) {
+        div.innerHTML = "<p>No se han realizado acciones.</p>";
+      } else {
+        div.innerHTML = historial.map(item => `<p>${item.hora} - ${item.accion}</p>`).join('');
+      }
+    }
+
+    function borrarTodo() {
+      if (confirm("¿Estás seguro de borrar todo el historial?")) {
+        historial = [];
+        mostrarHistorial();
+      }
+    }
+
+    function borrarPorFuncion() {
+      const tipo = document.getElementById("tipoBorrar").value;
+      if (tipo === "") {
+        alert("Selecciona una función para eliminar.");
+        return;
+      }
+
+      const cantidadAntes = historial.length;
+      historial = historial.filter(item => item.accion !== tipo);
+      const eliminados = cantidadAntes - historial.length;
+
+      if (eliminados > 0) {
+        alert(`Se eliminaron ${eliminados} registros de "${tipo}".`);
+      } else {
+        alert(`No se encontraron acciones de "${tipo}" para eliminar.`);
+      }
+
+      mostrarHistorial();
+    }
+  </script>
+</body>
+</html>

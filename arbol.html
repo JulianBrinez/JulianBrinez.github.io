@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Árbol Binario de Búsqueda</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #e0f2ff;
+      font-family: 'Roboto Slab', serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 500px;
+    }
+
+    h1 {
+      color: #0077b6;
+      margin-bottom: 20px;
+    }
+
+    input[type="number"] {
+      width: 80%;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-family: 'Roboto Slab', serif;
+    }
+
+    button {
+      background-color: #0077b6;
+      border: none;
+      padding: 10px 15px;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 5px;
+      font-family: 'Roboto Slab', serif;
+    }
+
+    button:hover {
+      background-color: #023e8a;
+    }
+
+    .output {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #0077b6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Árbol Binario de Búsqueda</h1>
+
+    <input id="insertValue" type="number" placeholder="Valor a insertar"><br>
+    <button onclick="insertNode()">Insertar</button>
+
+    <hr>
+
+    <input id="searchValue" type="number" placeholder="Valor a buscar"><br>
+    <button onclick="searchNode()">Buscar</button>
+
+    <div class="output" id="searchResult"></div>
+
+    <hr>
+    <button onclick="inOrderTraversal()">Mostrar recorrido inorden</button>
+    <div class="output" id="inOrderResult"></div>
+  </div>
+
+  <script>
+    class TreeNode {
+      constructor(value) {
+        this.value = value;
+        this.left = null;
+        this.right = null;
+      }
+    }
+
+    let root = null;
+
+    function insert(root, value) {
+      if (root === null) return new TreeNode(value);
+      if (value < root.value) root.left = insert(root.left, value);
+      else if (value > root.value) root.right = insert(root.right, value);
+      return root;
+    }
+
+    function insertNode() {
+      const value = parseInt(document.getElementById("insertValue").value);
+      if (isNaN(value)) {
+        alert("Por favor ingresa un valor válido.");
+        return;
+      }
+      root = insert(root, value);
+      document.getElementById("insertValue").value = '';
+      alert("Valor insertado correctamente.");
+    }
+
+    function search(root, value) {
+      if (root === null) return false;
+      if (root.value === value) return true;
+      return value < root.value ? search(root.left, value) : search(root.right, value);
+    }
+
+    function searchNode() {
+      const value = parseInt(document.getElementById("searchValue").value);
+      if (isNaN(value)) {
+        alert("Por favor ingresa un valor válido.");
+        return;
+      }
+      const found = search(root, value);
+      document.getElementById("searchResult").innerText = found
+        ? `✅ Valor ${value} encontrado en el árbol.`
+        : `❌ Valor ${value} no se encuentra.`;
+    }
+
+    function inOrderTraversal() {
+      const result = [];
+      function traverse(node) {
+        if (node) {
+          traverse(node.left);
+          result.push(node.value);
+          traverse(node.right);
+        }
+      }
+      traverse(root);
+      document.getElementById("inOrderResult").innerText = "Recorrido inorden: " + result.join(" → ");
+    }
+  </script>
+</body>
+</html>
